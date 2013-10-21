@@ -19,9 +19,13 @@ var el = function() {
         if (children.length) {
             var childs = [];
             children.map(function(child) {
-                childs.push(child.output());
+                if (child.hasOwnProperty("output") && child.output) {
+                    childs.push(child.output());
+                } else {
+                    childs.push(child);
+                }
             });
-            inner = childs.join("");
+            inner = childs.join(" ");
         }
         return "<" + propName + (renderedAttrs.length ? " " : "") + renderedAttrs.join(" ") + ">" + inner + "</" + propName + ">";
     }
@@ -33,7 +37,7 @@ var el = function() {
             return output();
         } else if (args.length == 1 && Object.prototype.toString.call(args[0]) == "[object Array]") {
             children = children.concat(args[0]);
-        } else if (args.length == 1 && Object.prototype.toString.call(args[0]) == "[object Object]") {
+        } else if (args.length == 1 && Object.prototype.toString.call(args[0]) == "[object Function]") {
             children.push(args[0]);
         } else if (args.length == 1) {
             content = args[0];
